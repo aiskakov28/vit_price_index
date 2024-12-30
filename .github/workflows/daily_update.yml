@@ -1,34 +1,61 @@
-name: Daily VIX Update
+name: Update VIX Data
 
 on:
   schedule:
-    - cron: '14 15 * * *' 
+    - cron: '14 19 * * *'  
+  workflow_dispatch:  
 
 jobs:
   update:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.9'
-    
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install pandas yfinance urllib3
         
-    - name: Run update script
+    - name: Update VIX data
       run: |
-        python app.py
+        python - <<EOF
+        import yfinance as yf
+        import pandas as pd
+        from datetime import datetime
+        
+        def get_new_data():
+            vix = yf.download('^VIX')
+            df_new = vix.reset_index()
+            df_new = df_new[['Date', 'Open', 'High', 'Low', 'Close']]
+            df_new.columns = ['DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE']
+            for col in ['OPEN', 'HIGH', 'LOW', 'CLOSE']:
+                df_new[col] = df_new[col].round(2)
+            return df_new
+            
+        try:
+            df_existing = pd.read_csv('VIX_History.csv')
+            df_existing['DATE'] = pd.to_datetime(df_existing['DATE'])
+        except FileNotFoundError:
+            df_existing = pd.DataFrame(columns=['DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE'])
+            
+        df_new = get_new_data()
+        df_combined = pd.concat([df_existing, df_new])
+        df_combined = df_combined.drop_duplicates(subset=['DATE'], keep='last')
+        df_combined = df_combined.sort_values('DATE')
+        df_combined.to_csv('VIX_History.csv', index=False, float_format='%.2f')
+        EOF
         
     - name: Commit and push if changed
       run: |
-        git config --global user.name 'GitHub Action'
-        git config --global user.email 'action@github.com'
+        git config --global user.name 'GitHub Action Bot'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add VIX_History.csv
-        git commit -m "Auto-update VIX data" || exit 0
+        git diff --quiet && git diff --staged --quiet || git commit -m "Update VIX data [skip ci]"
         git push
