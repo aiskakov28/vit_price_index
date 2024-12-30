@@ -97,41 +97,43 @@ def create_figure(data, column, title, color):
         )
     )
     fig.update_layout(
-        title=dict(
-            text=f"<b>{title}</b>",
-            font=dict(size=24, color='white'),
-            x=0.5,
-            y=0.95
-        ),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(240,240,240,0.95)',
-        xaxis=dict(
-            title="Date",
-            showgrid=True,
-            gridwidth=1,
-            gridcolor='rgba(128,128,128,0.2)',
-            showline=True,
-            linewidth=2,
-            linecolor='rgba(128,128,128,0.8)',
-            tickfont=dict(size=12, color='black'),
-            title_font=dict(color='black'),
-            rangeslider=dict(visible=True),
-            type='date',
-            fixedrange=False
-        ),
-        yaxis=dict(
-            title=f"{column} Price",
-            showgrid=True,
-            gridwidth=1,
-            gridcolor='rgba(128,128,128,0.2)',
-            showline=True,
-            linewidth=2,
-            linecolor='rgba(128,128,128,0.8)',
-            tickfont=dict(size=12, color='black'),
-            title_font=dict(color='black'),
-            fixedrange=False,
-            autorange=True
-        ),
+    paper_bgcolor='rgba(14,17,23,0.8)',
+    plot_bgcolor='rgba(14,17,23,0.8)',
+    font=dict(color='white'),
+    title=dict(
+        text=f"<b>{title}</b>",
+        font=dict(size=24, color='white'),
+        x=0.5,
+        y=0.95
+    ),
+    xaxis=dict(
+        title="Date",
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128,128,128,0.2)',
+        showline=True,
+        linewidth=2,
+        linecolor='rgba(128,128,128,0.8)',
+        tickfont=dict(size=12, color='white'),
+        title_font=dict(color='white'),
+        rangeslider=dict(visible=True),
+        type='date',
+        fixedrange=False
+    ),
+    yaxis=dict(
+        title=f"{column} Price",
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(128,128,128,0.2)',
+        showline=True,
+        linewidth=2,
+        linecolor='rgba(128,128,128,0.8)',
+        tickfont=dict(size=12, color='white'),
+        title_font=dict(color='white'),
+        fixedrange=False,
+        autorange=True
+        )
+    ),
         margin=dict(l=50, r=50, t=80, b=50),
         height=400,
         hovermode='x unified',
