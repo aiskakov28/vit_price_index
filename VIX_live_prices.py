@@ -13,6 +13,29 @@ st.set_page_config(
     menu_items={'About': 'VIX Price Analysis Dashboard'}
 )
 
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #0E1117;
+        color: white;
+    }
+    .stButton>button {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 4px;
+    }
+    h1, h2, h3 {
+        color: white !important;
+    }
+    .plot-container {
+        background-color: #0E1117 !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 def load_existing_data(filename='VIX_History.csv'):
     try:
         df_existing = pd.read_csv(filename)
